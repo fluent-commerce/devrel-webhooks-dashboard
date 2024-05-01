@@ -1,0 +1,176 @@
+{
+  "type": "page",
+  "path": "/devrel-webhooks-dashboard",
+  "nav": {
+    "label": "DevRel Webhooks Dashboard",
+    "icon": "MdEvent"
+  },
+  "component": "fc.page",
+  "props": {
+    "title": "DevRel Webhooks Dashboard - Updated on: {{dateStringFormatter (dateAdd)}}"
+  },
+  "descendants": [
+    {
+      "component": "fc.page.section.header",
+      "props": {
+        "title": "Webhooks - Last 24 Hours"
+      }
+    },
+    {
+      "component": "devrel.provider.rest",
+      "props": {
+        "endpoint": "api/v4.1/event",
+        "props": {
+          "name": "Send Webhook",
+          "category": "ACTION",
+          "from": "{{dateStringFormatter (dateSubtract hours=24) 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]' true}}"
+        }
+      },
+      "descendants": [
+        {
+          "component": "fc.dashboard.threshold",
+          "props": {
+            "label": "Sent",
+            "value": "{{results.length}}"
+          }
+        },
+        {
+          "component": "fc.list",
+          "props": {
+            "title": "Webhooks",
+            "dataSource": "results",
+            "responsiveness": "card",
+            "attributes": [
+              {
+                "label": "Timestamp",
+                "value": "{{dateStringFormatter generatedOn 'YYYY-MM-DD HH:mm:ss.SSS' true}}"
+              },
+              {
+                "label": "Entity Info",
+                "value": "{{context.rootEntityType}}: {{context.rootEntityRef}} - {{context.entityType}}: {{context.entityRef}}"
+              },
+              {
+                "label": "Request Endpoint",
+                "value": "{{attributes.byName.RequestEndpoint}}"
+              },
+              {
+                "label": "Response Code - Reason",
+                "template": "{{attributes.byName.Responsecode}} - {{attributes.byName.Responsereason}}",
+                "options": {
+                  "styles": [
+                    {
+                      "value": "{{attributes.byName.Responsecode}}",
+                      "matches": ["200", "202", "204"],
+                      "icon": {
+                        "name": "MdCheckCircle",
+                        "colour": "success"
+                      },
+                      "text": {
+                        "color": "success"
+                      }
+                    },
+                    {
+                      "value": "{{attributes.byName.Responsecode}}",
+                      "icon": {
+                        "name": "MdError",
+                        "colour": "error"
+                      },
+                      "text": {
+                        "color": "error"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "label": "Response Time",
+                "value": "{{subtract attributes.byName.stopTimer attributes.byName.startTimer}}ms"
+              },
+              {
+                "label": "Retailer Id",
+                "value": "{{retailerId}}"
+              },
+              {
+                "label": "Webhook Details",
+                "type": "component",
+                "options": {
+                  "component": "fc.drawer.button",
+                  "props": {
+                    "label": "Details",
+                    "title": "Webhook Details",
+                    "descendants": [
+                      {
+                        "component": "fc.card.attribute",
+                        "props": {
+                          "title": "Request Details",
+                          "attributes": [
+                            {
+                              "label": "Request Endpoint",
+                              "value": "{{attributes.byName.RequestEndpoint}}"
+                            },
+                            {
+                              "label": "Request Headers",
+                              "value": "{{attributes.byName.RequestHeaders}}"
+                            },
+                            {
+                              "label": "Request Body",
+                              "value": "{{attributes.byName.RequestBody}}"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "component": "fc.card.attribute",
+                        "props": {
+                          "title": "Response Details",
+                          "attributes": [
+                            {
+                              "label": "Response Code",
+                              "value": "{{attributes.byName.Responsecode}}"
+                            },
+                            {
+                              "label": "Response Reason",
+                              "value": "{{attributes.byName.Responsereason}}"
+                            },
+                            {
+                              "label": "Response Headers",
+                              "value": "{{attributes.byName.ResponseHeaders}}"
+                            },
+                            {
+                              "label": "Response Body",
+                              "value": "{{attributes.byName.ResponseBody}}"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "component": "fc.card.attribute",
+                        "props": {
+                          "title": "Exception Details",
+                          "attributes": [
+                            {
+                              "label": "Exception",
+                              "value": "{{attributes.byName.Exception}}"
+                            },
+                            {
+                              "label": "Stacktrace",
+                              "type": "component",
+                              "options": {
+                                "component": "fc.attribute.json",
+                                "dataSource": "attributes.byName.Stacktrace"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
