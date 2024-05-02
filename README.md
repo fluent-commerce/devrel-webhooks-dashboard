@@ -12,7 +12,7 @@ _**Note:** This snippet uses a custom component to enable display of Fluent REST
 
 You can add this page configuration to any Fluent Manifest Fragment, such as the Dashboards or Insights fragment of the Fluent OMS.
 
-Read the full How to guide: [Build a Webhooks Monitoring Dashboard](httos://docs.fluentcommerce.com/by-type/build-a-webhooks-monitoring-dashboard)
+Read the full How to guide: [Build a Webhooks Monitoring Dashboard](https://docs.fluentcommerce.com/by-type/build-a-webhooks-monitoring-dashboard)
 
 
 ## License Info
